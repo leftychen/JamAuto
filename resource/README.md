@@ -1,1 +1,1 @@
-store resources and properties files 
+Store resources and properties files 
