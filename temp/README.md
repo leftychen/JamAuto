@@ -1,1 +1,2 @@
-Demo code which may move to src after review 
+# JamAuto
+Test code for review
