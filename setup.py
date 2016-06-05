@@ -35,6 +35,9 @@ setup(
                         'statsmodels>=0.6.0',
                         'matplotlib>=1.4.0',
                         'tushare>=0.4.0',
-                        'pandas>=0.16.0'
+                        'pandas>=0.16.0',
+                        'scipy>=0.15.0',
+                        'xlrd',
+                        'mlxtend>=0.2.0'
                         ]
 )
