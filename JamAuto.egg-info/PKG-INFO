@@ -1,0 +1,16 @@
+Metadata-Version: 1.1
+Name: JamAuto
+Version: 0.1.0
+Summary: Python Trading and Algorithm Platform
+Home-page: https://github.com/leftychen/JamAuto
+Author: Jamauto team
+Author-email: lefty-chen@hotmail.com
+License: Apache 2.0
+Description: Trding automated platform based on Python and SQL
+        
+Platform: UNKNOWN
+Classifier: Development Status :: 3 - Alpha
+Classifier: Intended Audience :: Self
+Classifier: Topic :: Software Development :: Build Platform and Algorithm
+Classifier: License :: OSI Approved :: Apache 2.0
+Classifier: Programming Language :: Python :: 3.5

@@ -1,0 +1,7 @@
+README.rst
+setup.py
+JamAuto.egg-info/PKG-INFO
+JamAuto.egg-info/SOURCES.txt
+JamAuto.egg-info/dependency_links.txt
+JamAuto.egg-info/requires.txt
+JamAuto.egg-info/top_level.txt
