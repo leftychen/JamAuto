@@ -1,5 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
+import pandas as pd
 
 class BackTestTools:
     # Initialized
@@ -25,9 +26,9 @@ class BackTestTools:
     def runStrategy(self):
         self.__strategy(self.__data, self.__costRecords,self.__initFund)
         self.__costRecords = np.array(self.__costRecords)
-        self.__profit = (self.__costRecords[1:len(self.__costRecords)] \
-                            - self.__costRecords[0:-1]) / self.__costRecords[1:len(self.__costRecords)]
-        self.__cumProfit = np.cumsum(self.__profit)
+        self.__profit = (self.__costRecords[1:len(self.__costRecords)] - self.__costRecords[0:-1]) \
+                        / self.__costRecords[1:len(self.__costRecords)]
+        self.__cumProfit = [(x - self.__initFund) / self.__initFund for x in self.__costRecords]
         print("Total Days of investing: %s" %len(self.__dateList))
         print("Initial Fund : %s"  %self.__initFund)
         print("Final Fund Value: %s" %self.__costRecords[-1])
@@ -37,7 +38,7 @@ class BackTestTools:
 
     # Plot static graph
     def staticPlot(self, legend):
-        plt.plot_date(self.__dateList[1:len(self.__dateList)], self.__cumProfit, 'b-')
+        plt.plot_date(self.__dateList, self.__cumProfit, 'b-')
 
         plt.title("Back Test Result")
         plt.xlabel("date")
