@@ -24,6 +24,8 @@ class BackTestTools:
         self.__initFund = fund
     # run your Strategy
     def runStrategy(self):
+        if self__strategy == None:
+            raise KeyError("Strategy function cannot be found...")
         self.__strategy(self.__data, self.__costRecords,self.__initFund)
         self.__costRecords = np.array(self.__costRecords)
         self.__profit = (self.__costRecords[1:len(self.__costRecords)] - self.__costRecords[0:-1]) \
@@ -39,7 +41,6 @@ class BackTestTools:
     # Plot static graph
     def staticPlot(self, legend):
         plt.plot_date(self.__dateList, self.__cumProfit, 'b-')
-
         plt.title("Back Test Result")
         plt.xlabel("date")
         plt.ylabel("Profit Ratio")
