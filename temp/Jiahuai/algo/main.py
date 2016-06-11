@@ -78,7 +78,7 @@ for i in range(len(if00)):
         elif position==1: #开了正套
             #是否平仓
             if boll['gap'].ix[i-1]>=boll['mean'].ix[i-1] and boll['gap'].ix[i]<boll['mean'].ix[i]:#下穿均线平仓
-                ret=(gap_open-boll['gap'].ix[i])/cost #价差变化/成本
+                ret=(boll['gap'].ix[i-1]-boll['gap'].ix[i])/cost #价差变化/成本
                 n_w.append((1+ret)*n_w[i-1])
                 position=0
             else:
@@ -87,7 +87,7 @@ for i in range(len(if00)):
         else:
             #是否平仓
             if boll['gap'].ix[i-1]<=boll['mean'].ix[i-1] and boll['gap'].ix[i]>boll['mean'].ix[i]:#上穿均线平仓
-                ret=(boll['gap'].ix[i]-gap_open)/cost
+                ret=(boll['gap'].ix[i]-boll['gap'].ix[i-1])/cost
                 n_w.append((1+ret)*n_w[i-1])
                 position=0
             else:
