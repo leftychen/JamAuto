@@ -39,39 +39,28 @@ class SqlDBConnector:
         self.__cursor = self.__connection.cursor()
 
 #Function of Get the HS300 Index future of current month
-    def get_HS300_Current_Data(self, timestamp = None):
+    def get_HS300_Current_Data(self, start=None, end=None):
         df = None
-        if(self.__db != 'jamauto_stockmkt_data'):
+        if(self.__db != 'jamauto'):
             raise Exception("Please use stock market DataBase...")
             return
         try:
             query = None
-            if(timestamp == None):
+            if (start == None and end == None):
                 query = 'SELECT * FROM ' + self.__HS300_curr_table
+            elif (start == None):
+                query = 'SElECT * FROM ' + self.__HS300_curr_table + \
+                        " WHERE Date <= '%s'" % end
+            elif (end == None):
+                query = 'SElECT * FROM ' + self.__HS300_curr_table + \
+                        " WHERE Date >= '%s'" % start
             else:
                 query = 'SElECT * FROM ' + self.__HS300_curr_table + \
-                        ' WHERE Date BETWEEN ' + "'" + timestamp[0] + "'"\
-                        ' AND ' + "'" + timestamp[1] + "'"
-            self.__cursor.execute(query)
-            date = []
-            data = []
+                        " WHERE Date BETWEEN '%s' and '%s'" % (start, end)
 
-            for row in self.__cursor:
-                date.append(row[0])
-                temp = []
-                temp.append(row[1])
-                temp.append(row[2])
-                temp.append(row[3])
-                temp.append(row[4])
-                temp.append(row[5])
-                temp.append(row[6])
-                temp.append(row[7])
-                data.append(temp)
+            df = pd.read_sql(sql=query, con=self.__connection, index_col='Date')
 
-            date = np.array(date)
-            data = np.array(data,dtype='float')
-            df = pd.DataFrame(index = date, data = data,
-                              columns =['Open', 'High', 'Low', 'Close','Volume', 'VolumeAmount', 'Position'])
+
 
         except Exception as e:
             raise e
@@ -82,39 +71,26 @@ class SqlDBConnector:
 
 
 #Function of get the HS300 Future of next month
-    def get_HS300_Future_Data(self, timestamp = None):
+    def get_HS300_Future_Data(self, start=None, end=None):
         df = None
-        if (self.__db != 'jamauto_stockmkt_data'):
+        if (self.__db != 'jamauto'):
             raise Exception("Please use stock market DataBase...")
 
         try:
             query = None
-            if (timestamp == None):
+            if (start == None and end == None):
                 query = 'SELECT * FROM ' + self.__HS300_future_table
+            elif (start == None):
+                query = 'SELECT * FROM ' + self.__HS300_future_table + \
+                " WHERE Date <= '%s'" % end
+            elif (end == None):
+                query = 'SELECT * FROM ' + self.__HS300_future_table + \
+                " WHERE Date >= '%s'" % start
             else:
                 query = 'SElECT * FROM ' + self.__HS300_future_table + \
-                        ' WHERE Date BETWEEN ' + "'" + timestamp[0] + "'" \
-                        ' AND ' + "'" + timestamp[1] + "'"
+                        " WHERE Date BETWEEN '%s' and '%s'" % (start, end)
 
-            self.__cursor.execute(query)
-            date = []
-            data = []
-            for row in self.__cursor:
-                date.append(row[0])
-                temp = []
-                temp.append(row[1])
-                temp.append(row[2])
-                temp.append(row[3])
-                temp.append(row[4])
-                temp.append(row[5])
-                temp.append(row[6])
-                temp.append(row[7])
-                data.append(temp)
-
-            date = np.array(date)
-            data = np.array(data, dtype='float')
-            df = pd.DataFrame(index=date, data=data,
-                              columns=['Open', 'High', 'Low', 'Close', 'Volume', 'VolumeAmount', 'Position'])
+            df = pd.read_sql(sql=query, con=self.__connection, index_col='Date')
 
 
         except Exception as e:
@@ -128,8 +104,3 @@ class SqlDBConnector:
     def close(self):
         self.__cursor.close()
         self.__connection.close()
-
-
-
-
-
