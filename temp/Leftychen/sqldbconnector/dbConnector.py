@@ -3,6 +3,8 @@ import pymysql.cursors
 import pandas as pd
 import numpy as np
 import time
+
+
 class SqlDBConnector:
     '''
     Author: leftychen
@@ -26,8 +28,7 @@ class SqlDBConnector:
         self.__user = user
         self.__pwd = pwd
         self.__db = db
-        self.__HS300_curr_table = 'stockmkt_cn_if00'
-        self.__HS300_future_table = 'stockmkt_cn_if01'
+        self.__HS300_stockmkt = 'cn_stockmkt'
         #Connect to DB
         self.__connection = sql.connect(host = self.__host,
                                       user = self.__user,
@@ -39,26 +40,27 @@ class SqlDBConnector:
         self.__cursor = self.__connection.cursor()
 
 #Function of Get the HS300 Index future of current month
-    def get_HS300_Current_Data(self, start=None, end=None):
+    def get_HS300_Current(self, start=None, end=None):
         df = None
+        code='IF00'
         if(self.__db != 'jamauto'):
             raise Exception("Please use stock market DataBase...")
             return
         try:
             query = None
             if (start == None and end == None):
-                query = 'SELECT * FROM ' + self.__HS300_curr_table
+                query = 'SELECT * FROM ' + self.__HS300_stockmkt + " WHERE Code = '%s'" % code
             elif (start == None):
-                query = 'SElECT * FROM ' + self.__HS300_curr_table + \
-                        " WHERE Date <= '%s'" % end
+                query = 'SElECT * FROM ' + self.__HS300_stockmkt + \
+                        " WHERE Date <= '%s' and Code = '%s'" % (end, ode)
             elif (end == None):
-                query = 'SElECT * FROM ' + self.__HS300_curr_table + \
-                        " WHERE Date >= '%s'" % start
+                query = 'SElECT * FROM ' + self.__HS300_stockmkt + \
+                        " WHERE Date >= '%s' and Code = '%s'" % (start, code)
             else:
-                query = 'SElECT * FROM ' + self.__HS300_curr_table + \
-                        " WHERE Date BETWEEN '%s' and '%s'" % (start, end)
+                query = 'SElECT * FROM ' + self.__HS300_stockmkt + \
+                        " WHERE Date BETWEEN '%s' and '%s' and Code = '%s'" % (start, end, code)
 
-            df = pd.read_sql(sql=query, con=self.__connection, index_col='Date')
+            df = pd.read_sql(sql=query, con=self.__connection, index_col='Date').drop('Code', axis=1)
 
 
 
@@ -71,26 +73,27 @@ class SqlDBConnector:
 
 
 #Function of get the HS300 Future of next month
-    def get_HS300_Future_Data(self, start=None, end=None):
+    def get_HS300_Future(self, start=None, end=None):
         df = None
+        code = 'IF01'
         if (self.__db != 'jamauto'):
             raise Exception("Please use stock market DataBase...")
 
         try:
             query = None
             if (start == None and end == None):
-                query = 'SELECT * FROM ' + self.__HS300_future_table
+                query = 'SELECT * FROM ' + self.__HS300_stockmkt + " WHERE Code = '%s'" % code
             elif (start == None):
-                query = 'SELECT * FROM ' + self.__HS300_future_table + \
-                " WHERE Date <= '%s'" % end
+                query = 'SELECT * FROM ' + self.__HS300_stockmkt + \
+                " WHERE Date <= '%s' and Code = '%s'" % (end, code)
             elif (end == None):
-                query = 'SELECT * FROM ' + self.__HS300_future_table + \
-                " WHERE Date >= '%s'" % start
+                query = 'SELECT * FROM ' + self.__HS300_stockmkt + \
+                " WHERE Date >= '%s' and Code = '%s'" % (start, code)
             else:
-                query = 'SElECT * FROM ' + self.__HS300_future_table + \
-                        " WHERE Date BETWEEN '%s' and '%s'" % (start, end)
+                query = 'SElECT * FROM ' + self.__HS300_stockmkt + \
+                        " WHERE Date BETWEEN '%s' and '%s' and Code = '%s'" % (start, end, code)
 
-            df = pd.read_sql(sql=query, con=self.__connection, index_col='Date')
+            df = pd.read_sql(sql=query, con=self.__connection, index_col='Date').drop('Code', axis=1)
 
 
         except Exception as e:
