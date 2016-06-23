@@ -52,7 +52,7 @@ class SqlDBConnector:
                 query = 'SELECT * FROM ' + self.__HS300_stockmkt + " WHERE Code = '%s'" % code
             elif (start == None):
                 query = 'SElECT * FROM ' + self.__HS300_stockmkt + \
-                        " WHERE Date <= '%s' and Code = '%s'" % (end, ode)
+                        " WHERE Date <= '%s' and Code = '%s'" % (end, code)
             elif (end == None):
                 query = 'SElECT * FROM ' + self.__HS300_stockmkt + \
                         " WHERE Date >= '%s' and Code = '%s'" % (start, code)
