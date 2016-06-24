@@ -5,7 +5,7 @@ import numpy as np
 import time
 
 
-class SqlDBConnector:
+class SqlDBConnector(object):
     '''
     Author: leftychen
     Description:
@@ -24,6 +24,7 @@ class SqlDBConnector:
     '''
 # Constructor
     def __init__(self,user, pwd, db):
+        super(SqlDBConnector, self).__init__()
         self.__host = '174.128.226.174'
         self.__user = user
         self.__pwd = pwd
@@ -40,9 +41,8 @@ class SqlDBConnector:
         self.__cursor = self.__connection.cursor()
 
 #Function of Get the HS300 Index future of current month
-    def get_HS300_Current(self, start=None, end=None):
+    def get_HS300_stock(self, code=None, start=None, end=None):
         df = None
-        code='IF00'
         if(self.__db != 'jamauto'):
             raise Exception("Please use stock market DataBase...")
             return
@@ -63,7 +63,6 @@ class SqlDBConnector:
             df = pd.read_sql(sql=query, con=self.__connection, index_col='Date').drop('Code', axis=1)
 
 
-
         except Exception as e:
             raise e
             return None
@@ -72,38 +71,17 @@ class SqlDBConnector:
             return df
 
 
-#Function of get the HS300 Future of next month
+
+    def get_HS300_Current(self, start=None, end=None):
+        return self.get_HS300_stock(code='IF00', start=start, end=end)
+
     def get_HS300_Future(self, start=None, end=None):
-        df = None
-        code = 'IF01'
-        if (self.__db != 'jamauto'):
-            raise Exception("Please use stock market DataBase...")
+        return self.get_HS300_stock(code='IF01', start=start, end=end)
 
-        try:
-            query = None
-            if (start == None and end == None):
-                query = 'SELECT * FROM ' + self.__HS300_stockmkt + " WHERE Code = '%s'" % code
-            elif (start == None):
-                query = 'SELECT * FROM ' + self.__HS300_stockmkt + \
-                " WHERE Date <= '%s' and Code = '%s'" % (end, code)
-            elif (end == None):
-                query = 'SELECT * FROM ' + self.__HS300_stockmkt + \
-                " WHERE Date >= '%s' and Code = '%s'" % (start, code)
-            else:
-                query = 'SElECT * FROM ' + self.__HS300_stockmkt + \
-                        " WHERE Date BETWEEN '%s' and '%s' and Code = '%s'" % (start, end, code)
-
-            df = pd.read_sql(sql=query, con=self.__connection, index_col='Date').drop('Code', axis=1)
-
-
-        except Exception as e:
-            raise e
-
-
-        finally:
-            return df
 
 # Close the database
     def close(self):
         self.__cursor.close()
         self.__connection.close()
+
+
